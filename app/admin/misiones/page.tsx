@@ -176,13 +176,54 @@ export default function AdminMisionesPage() {
                       </span>
                     )}
                   </td>
-                  <td className="py-2 px-2 text-center">
+                  <td className="py-2 px-2 text-center align-top">
                     {m.url ? (
-                      <img
-                        src={`/api/qrcode?url=${encodeURIComponent(m.url)}`}
-                        alt={`QR ${m.code}`}
-                        className="inline-block w-16 h-16 rounded-md border border-slate-200 bg-white"
-                      />
+                      <div className="flex flex-col items-center gap-1">
+                        {/* QR mini, clicable para abrir la misión */}
+                        <a
+                          href={m.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          title="Abrir misión en nueva pestaña"
+                          className="inline-block"
+                        >
+                          <img
+                            src={`/api/qrcode?url=${encodeURIComponent(m.url)}`}
+                            alt={`QR ${m.code}`}
+                            className="inline-block w-16 h-16 rounded-md border border-slate-200 bg-white shadow-sm"
+                          />
+                        </a>
+
+                        {/* Link para ver/imprimir QR grande (si usas /qrs/[slug]) */}
+                        {m.qr_slug && (
+                          <a
+                            href={`/api/qrcode?type=svg&url=${encodeURIComponent(m.url)}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-[10px] text-amber-700 underline"
+                          >
+                            Ver / imprimir grande
+                          </a>
+                        )}
+
+                        {/* Descargas */}
+                        <div className="flex flex-wrap justify-center gap-1 mt-1">
+                          <a
+                            href={`/api/qrcode?type=png&url=${encodeURIComponent(m.url)}`}
+                            download={`qr-${m.code}.png`}
+                            className="text-[10px] text-slate-600 border border-slate-200 rounded-full px-2 py-0.5 hover:bg-slate-50"
+                          >
+                            PNG
+                          </a>
+                          <a
+                            href={`/api/qrcode?type=svg&url=${encodeURIComponent(m.url)}`}
+                            download={`qr-${m.code}.svg`}
+                            className="text-[10px] text-slate-600 border border-slate-200 rounded-full px-2 py-0.5 hover:bg-slate-50"
+                          >
+                            SVG
+                          </a>
+                        </div>
+                      </div>
                     ) : (
                       <span className="text-[10px] text-slate-400">—</span>
                     )}
