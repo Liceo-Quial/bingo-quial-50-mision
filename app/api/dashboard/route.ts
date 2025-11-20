@@ -1,4 +1,8 @@
 // app/api/dashboard/route.ts
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+export const fetchCache = "force-no-store";
+
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 
@@ -220,7 +224,12 @@ export async function GET() {
       roles: rolesCount,
       interests,
       missions: missionStats
-    });
+    },
+    {
+    headers: {
+      "Cache-Control": "no-store",
+    },
+  });
   } catch (err) {
     console.error("Error inesperado en /api/dashboard:", err);
     return new NextResponse("Bad Request", { status: 400 });
