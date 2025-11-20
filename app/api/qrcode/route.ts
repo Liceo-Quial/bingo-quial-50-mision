@@ -28,14 +28,18 @@ export async function GET(request: Request) {
 
     // default PNG (base64)
     const png = await QRCode.toDataURL(target);
-    return NextResponse.json(
-      { png },
-      {
-        headers: {
-          "Cache-Control": "no-store",
-        },
-      }
-    );
+
+    // data:image/png;base64,iVBORw...
+    const base64 = png.split(",")[1];
+    const imgBuffer = Buffer.from(base64, "base64");
+
+    return new NextResponse(imgBuffer, {
+      status: 200,
+      headers: {
+        "Content-Type": "image/png",
+        "Cache-Control": "no-store",
+      },
+    });
   } catch (error) {
     console.error("QR generation error:", error);
     return new NextResponse("Error generating QR", { status: 500 });
